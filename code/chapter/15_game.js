@@ -64,7 +64,7 @@ var actorChars = {
 
 function Player(pos) {
   this.pos = pos.plus(new Vector(0, -0.5));
-  this.size = new Vector(1, 1);
+  this.size = new Vector(1.5, 1.5);
   this.speed = new Vector(0, 0);
 }//设置玩家的size为1X1像素       速度为0
 Player.prototype.type = "player";
@@ -127,11 +127,22 @@ DOMDisplay.prototype.drawActors = function() {
   this.level.actors.forEach(function(actor) {
     var rect = wrap.appendChild(elt("div",
                                     "actor " + actor.type));
+
+    if(actor.type == "player"){
+      var target = parseInt(moveFlag / 3)+1;
+      if(target>2){
+        moveFlag = 0;
+        target = 1;
+      }
+      rect.style.backgroundImage="url(image/run"+(target)+".png)";
+    }
+    //人物的走动实现
     rect.style.width = actor.size.x * scale + "px";
     rect.style.height = actor.size.y * scale + "px";
     rect.style.left = actor.pos.x * scale + "px";
     rect.style.top = actor.pos.y * scale + "px";
   });
+  
   return wrap;
 };
 
@@ -235,11 +246,17 @@ Coin.prototype.act = function(step) {
 };//硬币的运动
 
 var playerXSpeed = 7;//玩家X方向的速度
-
+var moveFlag = 0;
 Player.prototype.moveX = function(step, level, keys) {
   this.speed.x = 0;
-  if (keys.left) this.speed.x -= playerXSpeed;
-  if (keys.right) this.speed.x += playerXSpeed;
+  if (keys.left) {
+    this.speed.x -= playerXSpeed; 
+     moveFlag++;
+}
+  if (keys.right) {
+    this.speed.x += playerXSpeed;
+    moveFlag++;
+}
 
   var motion = new Vector(this.speed.x * step, 0);
   var newPos = this.pos.plus(motion);
@@ -277,7 +294,7 @@ Player.prototype.act = function(step, level, keys) {
   if (otherActor)
     level.playerTouched(otherActor.type, otherActor);
 
-  // Losing animation
+  // Losing animation  失败动画
   if (level.status == "lost") {
     this.pos.y += step;
     this.size.y -= step;
@@ -348,16 +365,100 @@ function runLevel(level, Display, andThen) {
   });
 }
 
-function runGame(plans, Display) {
-  function startLevel(n) {
-    runLevel(new Level(plans[n]), Display, function(status) {
-      if (status == "lost")
-        startLevel(n);
-      else if (n < plans.length - 1)
-        startLevel(n + 1);
-      else
-        console.log("You win!");
-    });
+// function runGame(plans, Display) {
+//   function startLevel(n) {
+//     runLevel(new Level(plans[n]), Display, function(status) {
+//       if (status == "lost")
+//         startLevel(n);
+//       else if (n < plans.length - 1)
+//         startLevel(n + 1);
+//       else
+//         console.log("You win!");
+//     });
+//   }
+//   startLevel(0);
+// }
+
+  function runGame(plans, Display) {
+    function startLevel(n, lives) {
+      runLevel(new Level(plans[n]), Display, function(status) {
+        if (status == "lost") {
+          if (lives > 0) {
+            startLevel(n, lives - 1);
+          } else {
+            console.log("Game over");
+            startLevel(0, 3);
+          }     
+        } else if (n < plans.length - 1) {
+          startLevel(n + 1, lives);
+        } else {
+          console.log("You win!");
+        }
+      });
+    }
+    startLevel(0, 3);
   }
-  startLevel(0);
-}
+  runGame(GAME_LEVELS, DOMDisplay);
+  //3条命
+
+
+
+    function runLevel(level, Display, andThen) {
+    var display = new Display(document.body, level);
+    var running = "yes";
+    function handleKey(event) {
+      if (event.keyCode == 27) {
+        if (running == "no") {
+          running = "yes";
+          runAnimation(animation);
+        } else if (running == "pausing") {
+          running = "yes";
+        } else if (running == "yes") {
+          running = "pausing";
+        }
+      }
+    }
+    addEventListener("keydown", handleKey);
+    var arrows = trackKeys(arrowCodes);
+
+    function animation(step) {
+      if (running == "pausing") {
+        running = "no";
+        return false;
+      }
+
+      level.animate(step, arrows);
+      display.drawFrame(step);
+      if (level.isFinished()) {
+        display.clear();
+        removeEventListener("keydown", handleKey);
+        arrows.unregister(); 
+        if (andThen)
+          andThen(level.status);
+        return false;
+      }
+    }
+    runAnimation(animation);
+  }
+
+  function trackKeys(codes) {
+    var pressed = Object.create(null);
+    function handler(event) {
+      if (codes.hasOwnProperty(event.keyCode)) {
+        var state = event.type == "keydown";
+        pressed[codes[event.keyCode]] = state;
+        event.preventDefault();
+      }
+    }
+    addEventListener("keydown", handler);
+    addEventListener("keyup", handler);
+
+    pressed.unregister = function() {
+      removeEventListener("keydown", handler);
+      removeEventListener("keyup", handler);
+    };
+    return pressed;
+  }
+
+  runGame(GAME_LEVELS, DOMDisplay);
+  //游戏暂停

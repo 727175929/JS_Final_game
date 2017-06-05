@@ -2,7 +2,10 @@
                  table-layout: fixed;
                  border-spacing: 0;   }
 .background td { padding: 0;          }
-.lava          { background: rgb(255, 100, 100); }
+.lava {
+   background-image: url(../image/yanjian.png);
+   background-size: cover;
+   }
 .wall {
   background-image:url(../image/dimian.jpg);
   background-size: cover;
@@ -11,7 +14,10 @@
 .actor  {
   position: absolute;  
     }
-.coin   { background: rgb(241, 229, 89); }
+.coin { 
+  background-image: url(../image/JINBI.png);
+  background-size: cover;
+   }
 .player { 
           background-image:url(../image/run1.png);
           background-size: cover;
@@ -25,7 +31,8 @@
 }
 
 .lost .player {
-  background: rgb(160, 64, 64);
+  background-image:url(../image/run1.png);
+          background-size: cover;
 }
 .won .player {
   box-shadow: -4px -7px 8px white, 4px -7px 8px white;
