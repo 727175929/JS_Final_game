@@ -385,9 +385,12 @@ function runLevel(level, Display, andThen) {
         if (status == "lost") {
           if (lives > 0) {
             startLevel(n, lives - 1);
+            cutlife();
           } else {
             console.log("Game over");
             startLevel(0, 3);
+            life=3;
+            showlife();
           }     
         } else if (n < plans.length - 1) {
           startLevel(n + 1, lives);
@@ -403,6 +406,22 @@ function runLevel(level, Display, andThen) {
 
 
 
+function show_confirm()         //自定义提示函数
+{
+var r=confirm("点击OK继续游戏");
+if (r==true)
+  {
+  alert("游戏继续");
+  running = "yes";
+  runAnimation(animation);//运行动画
+  }
+else
+  {
+  alert("可以点击ESC继续游戏");
+  }
+}
+
+
     function runLevel(level, Display, andThen) {
     var display = new Display(document.body, level);
     var running = "yes";
@@ -410,10 +429,11 @@ function runLevel(level, Display, andThen) {
       if (event.keyCode == 27) {
         if (running == "no") {
           running = "yes";
-          runAnimation(animation);
+          runAnimation(animation);//运行动画
         } else if (running == "pausing") {
           running = "yes";
         } else if (running == "yes") {
+          show_confirm();
           running = "pausing";
         }
       }
