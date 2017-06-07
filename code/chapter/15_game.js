@@ -59,8 +59,26 @@ Vector.prototype.times = function(factor) {
 var actorChars = {
   "@": Player,
   "o": Coin,
-  "=": Lava, "|": Lava, "v": Lava
+  "=": Lava, "|": Lava, "v": Lava,
+  "g": Ghost
 };
+
+function Ghost(pos) {
+    this.pos = pos;
+    this.size = new Vector(1, 1);
+    this.speed = new Vector(-1, 0);
+    this.repeatPos = pos;
+}
+Ghost.prototype.type = "ghost";
+//初始化鬼魂的语句
+
+Ghost.prototype.act = function(step, level) {
+var newPos = this.pos.plus(this.speed.times(step));
+  if (!level.obstacleAt(newPos, this.size))
+    this.pos = newPos;
+  else
+    this.speed = this.speed.times(-1);
+};//处理鬼魂的的运动
 
 function Player(pos) {
   this.pos = pos.plus(new Vector(0, -0.5));
@@ -83,6 +101,10 @@ function Lava(pos, ch) {
 }
 Lava.prototype.type = "lava";
 //初始化岩浆的语句
+
+
+
+
 function Coin(pos) {
   this.basePos = this.pos = pos.plus(new Vector(0.2, 0.1));
   this.size = new Vector(0.6, 0.6);
@@ -136,7 +158,10 @@ DOMDisplay.prototype.drawActors = function() {
       }
       rect.style.backgroundImage="url(image/run"+(target)+".png)";
     }
-    //人物的走动实现
+    //人物的走动实现  
+
+
+
     rect.style.width = actor.size.x * scale + "px";
     rect.style.height = actor.size.y * scale + "px";
     rect.style.left = actor.pos.x * scale + "px";
@@ -305,7 +330,12 @@ Level.prototype.playerTouched = function(type, actor) {
   if (type == "lava" && this.status == null) {
     this.status = "lost";
     this.finishDelay = 1;
-  } else if (type == "coin") {
+  }
+  if (type == "ghost" && this.status == null) {    //触碰到鬼魂的动作   新增1
+    this.status = "lost";
+    this.finishDelay = 1;
+  }
+   else if (type == "coin") {
     this.actors = this.actors.filter(function(other) {
       return other != actor;
     });

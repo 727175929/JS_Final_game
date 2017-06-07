@@ -22,7 +22,6 @@
           background-image:url(../image/run1.png);
           background-size: cover;
  }
-
 .game {
   overflow: hidden;
   max-width: 90%;
@@ -37,4 +36,8 @@
 }
 .won .player {
   box-shadow: -4px -7px 8px white, 4px -7px 8px white;
+}
+.ghost {
+  background-image:url(../image/guihun.png);
+          background-size: cover;
 }
