@@ -571,7 +571,7 @@ function runLevel(level, Display, andThen) {
           } else {
             console.log("Game over");
             startLevel(0, 3);
-            life=3;
+            life=4;
             showlife();
             cs();
           }     

@@ -409,7 +409,7 @@ function runLevel(level, Display, andThen) {
 //   startLevel(0);
 // }
 
-   function runGame(plans, Display) {
+  function runGame(plans, Display) {
     function startLevel(n, lives) {
       runLevel(new Level(plans[n]), Display, function(status) {
         if (status == "lost") {
@@ -419,7 +419,7 @@ function runLevel(level, Display, andThen) {
           } else {
             console.log("Game over");
             startLevel(0, 3);
-            life=3;
+            life=4;
             showlife();
             cs();
           }     
@@ -434,6 +434,7 @@ function runLevel(level, Display, andThen) {
   }
   runGame(GAME_LEVELS, DOMDisplay);
   //3条命
+
 
 
 
