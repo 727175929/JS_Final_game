@@ -573,6 +573,7 @@ function runLevel(level, Display, andThen) {
             startLevel(0, 3);
             life=3;
             showlife();
+            cs();
           }     
         } else if (n < plans.length - 1) {
           startLevel(n + 1, lives);
@@ -599,10 +600,12 @@ if (r==true)
   }
 else
   {
+  timeflag = 0;    
+    stopCount();
   alert("可以点击ESC继续游戏");
   }
 }
-
+var timeflag = 1;
 
     function runLevel(level, Display, andThen) {
     var display = new Display(document.body, level);
@@ -610,6 +613,9 @@ else
     function handleKey(event) {
       if (event.keyCode == 27) {
         if (running == "no") {
+          if(timeflag == 0){
+            timedCount();
+          }
           running = "yes";
           runAnimation(animation);//运行动画
         } else if (running == "pausing") {
