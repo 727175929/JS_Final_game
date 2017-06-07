@@ -1,0 +1,47 @@
+.background    { background: rgb(52, 166, 251);
+                 table-layout: fixed;
+                 border-spacing: 0;   }
+.background td { padding: 0;          }
+.lava {
+   background-image: url(../image/yanjian.png);
+   background-size: cover;
+   }
+.wall {
+  background-image:url(../image/dimian.jpg);
+  background-size: cover;
+}
+
+.actor  {
+  position: absolute;  
+    }
+.coin { 
+  background-image: url(../image/JINBI.png);
+  background-size: cover;
+   }
+.player { 
+          background-image:url(../image/run1.png);
+          background-size: cover;
+ }
+ .player2 { 
+          background-image:url(../image/run1.png);
+          background-size: cover;
+ }
+.game {
+  overflow: hidden;
+  max-width: 90%;
+  max-height: 450px;
+  margin:0 auto;
+  position: relative;
+}
+
+.lost .player {
+  background-image:url(../image/run1.png);
+          background-size: cover;
+}
+.won .player {
+  box-shadow: -4px -7px 8px white, 4px -7px 8px white;
+}
+.ghost {
+  background-image:url(../image/guihun.png);
+          background-size: cover;
+}

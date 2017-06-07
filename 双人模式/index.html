@@ -1,0 +1,27 @@
+<!doctype html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<script src="code/chapter/15_game.js"></script>
+<script src="code/game_levels.js"></script>
+<script src="code/time.js"></script>
+<script src="code/life.js"></script>
+
+
+<form>
+<link rel="stylesheet" href="css/game.css">
+
+<input type="button" value="开始!"  id="start" onClick="timedCount()">
+<input type="text" id="txt">
+<input type="button" value="停止!" id="end" onClick="stopCount()">
+<input type="button" value="清零！" id="ss" onClick="cs()">
+
+<br>
+</br>
+<label for="male">生命值：</label>
+<input type="text" name="life" id="life" value="0" />
+</form>
+<body>
+  <script>
+    runGame(GAME_LEVELS, DOMDisplay);
+    showlife();
+  </script>
+</body>
