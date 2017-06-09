@@ -66,18 +66,64 @@ var actorChars = {
 function Ghost(pos) {
     this.pos = pos;
     this.size = new Vector(1, 1);
-    this.speed = new Vector(-1, 0);
+    this.speed = new Vector(1, 0);
     this.repeatPos = pos;
+    this.Count = 0;
+    this.x = 0;
+    this.y = 1;
 }
 Ghost.prototype.type = "ghost";
 //初始化鬼魂的语句
 
+
+// Lava.prototype.act = function(step, level) {
+//   var newPos = this.pos.plus(this.speed.times(step));
+//   if (!level.obstacleAt(newPos, this.size))
+//     this.pos = newPos;
+//   else if (this.repeatPos)
+//     this.pos = this.repeatPos;
+//   else
+//     this.speed = this.speed.times(-1);
+// };//处理岩浆的运动
+
 Ghost.prototype.act = function(step, level) {
 var newPos = this.pos.plus(this.speed.times(step));
+// this.Count++;
+// if(this.Count%10 >= Math.random(5)){
+//   this.Count==0;
+//   this.speed = new Vector(1, 0);
+// }
+// else 
+// {
+//   this.Count==0;
+//   this.speed = new Vector(0, 1);
+// }
+
+// this.Count++;
+// if(this.Count==300){
+//   this.x = 1; this.y = 1;
+// this.speed = new Vector(this.x,this.y);
+// }
+// if(this.Count==600){
+//   this.x=-1;this.y=-1;
+// this.speed = new Vector(this.x, this.y);
+// }
+// if(this.Count==900)
+// {
+//   this.x=-1;this.y=1;
+// this.speed = new Vector(this.x, this.y);
+// }
+// if(this.Count==1200)
+// {
+//   this.Count = 0;
+//   this.x=-1;this.y=-1;
+// this.speed = new Vector(this.x, this.y);
+// }
   if (!level.obstacleAt(newPos, this.size))
     this.pos = newPos;
-  else
+  else{
     this.speed = this.speed.times(-1);
+  }
 };//处理鬼魂的的运动
 
 function Player(pos) {
@@ -362,10 +408,10 @@ Level.prototype.playerTouched = function(type, actor) {
     this.status = "lost";
     this.finishDelay = 1;
   }
-  if (type == "ghost" && this.status == null) {    //触碰到鬼魂的动作   新增1
-    this.status = "lost";
-    this.finishDelay = 1;
-  }
+  // if (type == "ghost" && this.status == null) {    //触碰到鬼魂的动作   新增1
+  //   this.status = "lost";
+  //   this.finishDelay = 1;
+  // }
    else if (type == "coin") {
     this.actors = this.actors.filter(function(other) {
       return other != actor;

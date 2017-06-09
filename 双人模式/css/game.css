@@ -6,6 +6,10 @@
    background-image: url(../image/yanjian.png);
    background-size: cover;
    }
+   .lava2 {
+   background-image: url(../image/yanjian2.png);
+   background-size: cover;
+   }
 .wall {
   background-image:url(../image/dimian.jpg);
   background-size: cover;
@@ -19,23 +23,23 @@
   background-size: cover;
    }
 .player { 
-          background-image:url(../image/run1.png);
+          background-image:url(../image/l1.png);
           background-size: cover;
  }
  .player2 { 
-          background-image:url(../image/run1.png);
+          background-image:url(../image/l1.png);
           background-size: cover;
  }
 .game {
   overflow: hidden;
-  max-width: 90%;
+  max-width: 660px;
   max-height: 450px;
   margin:0 auto;
   position: relative;
 }
 
 .lost .player {
-  background-image:url(../image/run1.png);
+  background-image:url(../image/l1.png);
           background-size: cover;
 }
 .won .player {

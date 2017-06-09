@@ -29,6 +29,8 @@ function Level(plan) {
         fieldType = "wall";
       else if (ch == "!")
         fieldType = "lava";
+        else if (ch == "w")
+        fieldType = "lava2";
       gridLine.push(fieldType);
     }
     this.grid.push(gridLine);
@@ -64,12 +66,12 @@ var actorChars = {
   "u":Player2,     //玩家2
   "o": Coin,
   "=": Lava, "|": Lava, "v": Lava,
-  "g": Ghost
+  "g": Ghost,
 };
 
 function Player2(pos) {
   this.pos = pos.plus(new Vector(0, -0.5));
-  this.size = new Vector(1.5, 1.5);
+  this.size = new Vector(1, 1.4);
   this.speed = new Vector(0, 0);
 }
 Player2.prototype.type = "player2";
@@ -88,11 +90,24 @@ Player2.prototype.act = function(step, level, keys) {
     this.size.y -= step;
   }
 };
+var leftCount1 = 0;
+var rightCount1 = 0;
 Player2.prototype.moveX = function(step, level, keys) {
   this.speed.x = 0;
-  if (keys.left1) this.speed.x -= playerXSpeed;
-  if (keys.right1) this.speed.x += playerXSpeed;
-
+  if (keys.left1) {
+    this.speed.x -= playerXSpeed;
+    leftCount1++;
+    rightCount1 = 0;
+  }
+  if (keys.right1) {
+    rightCount1++;
+    leftCount1 = 0;
+    this.speed.x += playerXSpeed;
+  }
+  // else {
+  //   leftCount1 = 0;
+  //   rightCount1 = 0;
+  // }
   var motion = new Vector(this.speed.x * step, 0);
   var newPos = this.pos.plus(motion);
   var obstacle = level.obstacleAt(newPos, this.size);
@@ -117,6 +132,14 @@ Player2.prototype.moveY = function(step, level, keys) {
   }
 };
 Level.prototype.playerTouched2 = function(type, actor) {
+  if (type == "lava2" && this.status == null) {
+    this.status = "lost";
+    this.finishDelay = 1;
+  }
+  if (type == "ghost" && this.status == null) {    //触碰到鬼魂的动作   新增1
+    this.status = "lost";
+    this.finishDelay = 1;
+  }
    if (type == "coin") {
     this.actors = this.actors.filter(function(other) {
       return other != actor;
@@ -230,7 +253,7 @@ var newPos = this.pos.plus(this.speed.times(step));
 
 function Player(pos) {
   this.pos = pos.plus(new Vector(0, -0.5));
-  this.size = new Vector(1.5, 1.5);
+  this.size = new Vector(1, 1.4);
   this.speed = new Vector(0, 0);
 }//设置玩家的size为1X1像素       速度为0
 Player.prototype.type = "player";
@@ -302,12 +325,30 @@ DOMDisplay.prototype.drawActors = function() {
                                     "actor " + actor.type));
 
     if(actor.type == "player"){
-      var target = parseInt(moveFlag / 3)+1;
-      if(target>2){
-        moveFlag = 0;
-        target = 1;
+        if(leftCount == 0 && rightCount == 0)
+        rect.style.backgroundImage = "url(image/r1.png)";
+        else if(rightCount > 0){
+          var n1 = parseInt((rightCount % 16)/2)+2;
+        rect.style.backgroundImage = "url(image/r"+n1+".png)";
       }
-      rect.style.backgroundImage="url(image/run"+(target)+".png)";
+      else if(leftCount > 0){
+          var n1 = parseInt((leftCount % 16)/2)+2;
+        rect.style.backgroundImage = "url(image/l"+n1+".png)";
+      } 
+      
+    }
+    if(actor.type == "player2"){
+        if(leftCount1 == 0 && rightCount1 == 0)
+        rect.style.backgroundImage = "url(image/r1.png)";
+        else if(rightCount1 > 0){
+          var n1 = parseInt((rightCount1 % 16)/2)+2;
+        rect.style.backgroundImage = "url(image/r"+n1+".png)";
+      }
+      else if(leftCount1 > 0){
+          var n1 = parseInt((leftCount1 % 16)/2)+2;
+        rect.style.backgroundImage = "url(image/l"+n1+".png)";
+      } 
+      
     }
     //人物的走动实现  
 
@@ -423,16 +464,24 @@ Coin.prototype.act = function(step) {
 
 var playerXSpeed = 7;//玩家X方向的速度
 var moveFlag = 0;
+var leftCount = 0;
+var rightCount = 0;
 Player.prototype.moveX = function(step, level, keys) {
-  this.speed.x = 0;
+ this.speed.x = 0;
   if (keys.left) {
     this.speed.x -= playerXSpeed; 
-     moveFlag++;
+     leftCount++;
+    rightCount = 0;
 }
-  if (keys.right) {
+  else if (keys.right) {
     this.speed.x += playerXSpeed;
-    moveFlag++;
+    rightCount++;
+    leftCount = 0;
 }
+// else {
+//     leftCount = 0;
+//     rightCount = 0;
+//   }
 
   var motion = new Vector(this.speed.x * step, 0);
   var newPos = this.pos.plus(motion);
@@ -478,6 +527,7 @@ Player.prototype.act = function(step, level, keys) {
 };
 
 Level.prototype.playerTouched = function(type, actor) {
+  // if(actor.type == "Player"){}
   if (type == "lava" && this.status == null) {
     this.status = "lost";
     this.finishDelay = 1;
