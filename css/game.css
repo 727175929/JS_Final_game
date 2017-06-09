@@ -19,19 +19,20 @@
   background-size: cover;
    }
 .player { 
-          background-image:url(../image/run1.png);
+          background-image:url(../image/r1.png);
           background-size: cover;
+          
  }
 .game {
   overflow: hidden;
-  max-width: 90%;
+  max-width: 660px;
   max-height: 450px;
   margin:0 auto;
   position: relative;
 }
 
 .lost .player {
-  background-image:url(../image/run1.png);
+  background-image:url(../image/r1.png);
           background-size: cover;
 }
 .won .player {

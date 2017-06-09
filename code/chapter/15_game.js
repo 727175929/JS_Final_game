@@ -82,7 +82,7 @@ var newPos = this.pos.plus(this.speed.times(step));
 
 function Player(pos) {
   this.pos = pos.plus(new Vector(0, -0.5));
-  this.size = new Vector(1.5, 1.5);
+  this.size = new Vector(1, 1.4);
   this.speed = new Vector(0, 0);
 }//设置玩家的size为1X1像素       速度为0
 Player.prototype.type = "player";
@@ -151,12 +151,30 @@ DOMDisplay.prototype.drawActors = function() {
                                     "actor " + actor.type));
 
     if(actor.type == "player"){
-      var target = parseInt(moveFlag / 3)+1;
-      if(target>2){
-        moveFlag = 0;
-        target = 1;
+      if(isjunmp){
+        if(leftCount>0)
+        rect.style.backgroundImage = "url(image/junmp.png)";
+        else
+        rect.style.backgroundImage = "url(image/r1.png)";
       }
-      rect.style.backgroundImage="url(image/run"+(target)+".png)";
+      else{
+        if(leftCount == 0 && rightCount == 0)
+        rect.style.backgroundImage = "url(image/r1.png)";
+        else if(rightCount > 0){
+          var n1 = parseInt((rightCount % 16)/2)+2;
+        rect.style.backgroundImage = "url(image/r"+n1+".png)";
+      }
+      else if(leftCount > 0){
+          var n1 = parseInt((leftCount % 16)/2)+2;
+        rect.style.backgroundImage = "url(image/l"+n1+".png)";
+      } 
+      }
+      // var target = parseInt(moveFlag / 3)+1;
+      // if(target>2){
+      //   moveFlag = 0;
+      //   target = 1;
+      // }
+      // rect.style.backgroundImage="url(image/run"+(target)+".png)";
     }
     //人物的走动实现  
 
@@ -271,17 +289,24 @@ Coin.prototype.act = function(step) {
 };//硬币的运动
 
 var playerXSpeed = 7;//玩家X方向的速度
-var moveFlag = 0;
+var leftCount = 0;
+var rightCount = 0;
 Player.prototype.moveX = function(step, level, keys) {
   this.speed.x = 0;
   if (keys.left) {
     this.speed.x -= playerXSpeed; 
-     moveFlag++;
+     leftCount++;
+    rightCount = 0;
 }
-  if (keys.right) {
+  else if (keys.right) {
     this.speed.x += playerXSpeed;
-    moveFlag++;
+    rightCount++;
+    leftCount = 0;
 }
+else {
+    leftCount = 0;
+    rightCount = 0;
+  }
 
   var motion = new Vector(this.speed.x * step, 0);
   var newPos = this.pos.plus(motion);
@@ -295,6 +320,7 @@ Player.prototype.moveX = function(step, level, keys) {
 var gravity = 30;   //重力
 var jumpSpeed = 17;  //跳跃速度
 
+var isjunmp = false;
 Player.prototype.moveY = function(step, level, keys) {
   this.speed.y += step * gravity;
   var motion = new Vector(0, this.speed.y * step);
@@ -302,10 +328,15 @@ Player.prototype.moveY = function(step, level, keys) {
   var obstacle = level.obstacleAt(newPos, this.size);
   if (obstacle) {
     level.playerTouched(obstacle);
-    if (keys.up && this.speed.y > 0)
+    if (keys.up && this.speed.y > 0){
       this.speed.y = -jumpSpeed;
-    else
+      // isjunmp = true;  
+  }
+    else{
       this.speed.y = 0;
+      // isjunmp = false;
+    }
+      
   } else {
     this.pos = newPos;
   }
