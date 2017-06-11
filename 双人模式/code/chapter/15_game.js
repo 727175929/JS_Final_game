@@ -527,7 +527,6 @@ Player.prototype.act = function(step, level, keys) {
 };
 
 Level.prototype.playerTouched = function(type, actor) {
-  // if(actor.type == "Player"){}
   if (type == "lava" && this.status == null) {
     this.status = "lost";
     this.finishDelay = 1;

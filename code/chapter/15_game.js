@@ -207,11 +207,11 @@ DOMDisplay.prototype.drawActors = function() {
         if(leftCount == 0 && rightCount == 0)
         rect.style.backgroundImage = "url(image/r1.png)";
         else if(rightCount > 0){
-          var n1 = parseInt((rightCount % 16)/2)+2;
+          var n1 = parseInt((rightCount % 16)/2)+1;
         rect.style.backgroundImage = "url(image/r"+n1+".png)";
       }
       else if(leftCount > 0){
-          var n1 = parseInt((leftCount % 16)/2)+2;
+          var n1 = parseInt((leftCount % 16)/2)+1;
         rect.style.backgroundImage = "url(image/l"+n1+".png)";
       } 
       }
